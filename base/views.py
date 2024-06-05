@@ -8,24 +8,27 @@ from django.contrib.auth.views import LoginView
 from django.contrib.auth.views import LogoutView
 from .forms import LoginForm, RoomForm, UrzadzenieForm
 from .models import Pokoj, Uprawnieniauzytkownika, Urzadzenie
-import RPi.GPIO as GPIO
+#import RPi.GPIO as GPIO
 from django.http import JsonResponse
-GPIO.setmode(GPIO.BCM)
+#GPIO.setmode(GPIO.BCM)
 def admin_dashboard(request):
     return render(request, 'base/admin_wybor.html')
 
-def toggle_device_pin_state(request, device_id, new_state):
-    device = Urzadzenie.objects.get(id=device_id)
-    device.state = new_state
-    device.save()
+def toggle_device_pin_state(request):
+    if request.method == 'POST':
+        device_id = request.POST.get('device_id')
+        new_state = request.POST.get('new_state')
 
-    pin_number = device.pin
+        device = Urzadzenie.objects.get(id=device_id)
+        device.state = new_state
+        device.save()
+        pin_number = device.pin
+        GPIO.setup(pin_number, GPIO.OUT)
+        GPIO.output(pin_number, new_state)
 
-    GPIO.setup(pin_number, GPIO.OUT)
-
-    GPIO.output(pin_number, new_state)
-
-    return JsonResponse({'success': True, 'new_state': new_state})
+        return JsonResponse({'success': True, 'new_state': new_state})
+    else:
+        return JsonResponse({'error': 'Invalid request method'})
 
 class CustomLoginView(LoginView):
     template_name = 'base/logowanie.html'

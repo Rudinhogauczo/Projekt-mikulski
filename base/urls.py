@@ -14,5 +14,5 @@ urlpatterns = [
     path('delete-pokoj/<int:pk>/', views.usun_pokoj, name='url_usun_pokoj'),
     path('delete_user/<int:user_id>/', views.delete_user, name='url_delete_user'),
     path('edit_permissions/<int:user_id>/', edit_permissions, name='url_edit_permissions'),  
-    path('toggle-device-pin-state/<int:device_id>/<str:new_state>/', views.toggle_device_pin_state, name='toggle_device_pin_state'),
+    path('toggle-device-pin-state/', views.toggle_device_pin_state, name='toggle_device_pin_state'),
 ]       
