@@ -26,4 +26,4 @@ class RoomForm(forms.Form):
 class UrzadzenieForm(forms.ModelForm):
     class Meta:
         model = Urzadzenie
-        fields = ['name', 'room']    
+        fields = ['name', 'room', 'pin']

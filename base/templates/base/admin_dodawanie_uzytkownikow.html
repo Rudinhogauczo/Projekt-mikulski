@@ -22,9 +22,8 @@
             background-color: #f74c4c;
             color: #fff;
             padding-right: 40px;
-            border-top: #000000;
-            border-bottom: #000000;
-            border-style: solid;
+            border-top: 1px solid #000000;
+            border-bottom: 1px solid #000000;
             font-size: 15px;
             text-align: right;
         }
@@ -59,16 +58,47 @@
         }
         .lista-uzytkownikow {
             margin-bottom: 20px;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            padding: 20px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
         }
+        
+        .lista-uzytkownikow h2 {
+            margin-bottom: 10px;
+        }
+        
         .lista-uzytkownikow ul {
             list-style-type: none;
             padding: 0;
-            margin: 0;
         }
+        
         .lista-uzytkownikow li {
-            padding: 8px;
+            padding: 10px;
             border-bottom: 1px solid #ddd;
-            text-align: left;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            min-width: 300px; /* Stała szerokość dla elementu li */
+        }
+        
+        .lista-uzytkownikow li:last-child {
+            border-bottom: none;
+        }
+        
+        .lista-uzytkownikow li button {
+            background-color: #f74c4c;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-left: 10px;
+        }
+        
+        .lista-uzytkownikow li button:hover {
+            background-color: #d43f3f;
         }
         .dodaj-uzytkownika {
             width: 50%;
@@ -111,6 +141,7 @@
         .dodaj-uzytkownika .back-button a:hover {
             text-decoration: underline;
         }
+
     </style>
 </head>
 <body>
@@ -132,7 +163,16 @@
             <h2>Lista użytkowników</h2>
             <ul>
                 {% for user in users %}
-                    <li>{{ user.username }}</li>
+                <li>
+                    {{ user.username }}
+                    <form action="{% url 'url_edit_permissions' user.id %}" method="get">
+                        <button type="submit">Edytuj uprawnienia</button>
+                    </form>
+                    <form action="{% url 'url_delete_user' user.id %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit">Usuń użytkownika</button>
+                    </form>
+                </li>
                 {% endfor %}
             </ul>
         </div>

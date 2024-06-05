@@ -209,6 +209,7 @@
                         <tr>
                             <th>Nazwa urządzenia</th>
                             <th>Pokój</th>
+                            <th>Pin</th>
                             <th>Akcje</th>
                         </tr>
                     </thead>
@@ -217,6 +218,7 @@
                         <tr>
                             <td>{{ urzadzenie.name }}</td>
                             <td>{{ urzadzenie.room.nazwa }}</td>
+                            <td>{{ urzadzenie.pin }}</td>
                             <td>
                                 <form method="post" action="{% url 'url_delete_urzadzenie' urzadzenie.id %}">
                                     {% csrf_token %}

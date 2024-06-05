@@ -1,0 +1,157 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Obsługa urządzeń</title>
+    <style>
+        /* Style CSS */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #fa8f8f;
+            color: #000000;
+            padding: 10px 20px;
+            text-align: center; 
+            height: 80px;
+        }
+        nav {
+            background-color: #f74c4c;
+            color: #fff;
+            padding-right: 40px;
+            border-top: #000000;
+            border-bottom: #000000;
+            border-width: 1px;
+            border-style: solid;
+            font-size: 15px;
+            text-align: right;
+        }
+        nav ul {
+            display: flex;
+            justify-content: end;
+            list-style-type: none;
+        }
+        nav ul li {
+            margin-right: 10px;
+        }
+        section {
+            padding: 20px;
+        }
+        footer {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 10px 0;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+        .device-list {
+            margin-bottom: 20px;
+        }
+        .device-list table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        .device-list th, .device-list td {
+            padding: 8px;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+        }
+        .device-list th {
+            background-color: #f74c4c;
+            color: white;
+        }
+        .device-list td button {
+            background-color: #1b962f;
+            color: #ffffff;
+            border: none;
+            padding: 6px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+            margin-left: 5px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo-container">
+            <img src="{% static 'base/img/Logo.png' %}" alt="Logo" class="logo" width="250" height="80"> 
+        </div>
+    </header>
+    <nav>
+        <ul>
+            {% if user.is_authenticated %}
+                <li>Zalogowany jako: {{ user.username }}</li>
+                <li><a href="{% url 'url_logout' %}">Wyloguj</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+    <section>
+        <div class="device-list">
+            <h2>Obsługa urządzeń</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nazwa urządzenia</th>
+                        <th>Akcje</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for device in devices %}
+                        <tr>
+                            <td>{{ device.name }}</td>
+                            <td>
+                                <button id="device_{{ device.id }}" onclick="toggleDevicePinState('{{ device.id }}', '{{ not device.state }}')">
+                                    {% if device.state %}
+                                        Wyłącz
+                                    {% else %}
+                                        Włącz
+                                    {% endif %}
+                                </button>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="2">Brak urządzeń.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+    <footer>
+        &copy; 2024 Controlex. All rights reserved.
+    </footer>
+
+    <script>
+        function toggleDevicePinState(deviceId, newState) {
+            console.log("Zmiana stanu urządzenia", deviceId, newState);
+            $.ajax({
+                url: '{% url "toggle_device_pin_state" %}',
+                method: 'POST',
+                data: {
+                    device_id: deviceId,
+                    new_state: newState,
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                },
+                success: function(response) {
+                    console.log("Zmiana stanu urządzenia udana");
+                    if (response.new_state) {
+                        $("#device_" + deviceId).text("Wyłącz");
+                    } else {
+                        $("#device_" + deviceId).text("Włącz");
+                    }
+                },
+                error: function(xhr, errmsg, err) {
+                    console.log("Błąd podczas zmiany stanu urządzenia:", errmsg);
+                }
+            });
+        }
+    </script>
+</body>
+</html>

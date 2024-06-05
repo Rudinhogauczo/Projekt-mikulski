@@ -18,6 +18,15 @@
             text-align: center; 
             height: 80px;
         }
+        nav {
+            background-color: #f74c4c;
+            color: #fff;
+            padding-right: 40px;
+            border-top: 1px solid #000000;
+            border-bottom: 1px solid #000000;
+            font-size: 15px;
+            text-align: right;
+        }
 
         nav ul {
             display: flex;
@@ -94,13 +103,14 @@
         }
         
         .dodaj-pokoj input[type="submit"] {
-            width: calc(100% - 20px);
-            background-color: #1b962f;
-            color: #ffffff;
+            width: 100%;
+            background-color: #f74c4c;
+            color: #fff;
             border: none;
             padding: 10px;
-            border-radius: 3px;
+            border-radius: 5px;
             cursor: pointer;
+            font-size: 16px;
         }
         
         .dodaj-pokoj .back-button {
@@ -183,7 +193,7 @@
                 <form method="post">
                     {% csrf_token %}
                     {{ form.as_p }}
-                    <input type="submit" value="Dodaj użytkownika">
+                    <input type="submit" value="Dodaj pokój">
                 </form>
                 <div class="back-button">
                     <a href="{% url 'url_admin_wybor' %}">Powrót</a>
