@@ -1,0 +1,157 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zarządzanie użytkownikami</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #fa8f8f;
+            color: #000000;
+            padding: 10px 20px;
+            text-align: center; 
+            height: 80px;
+        }
+        nav {
+            background-color: #f74c4c;
+            color: #fff;
+            padding-right: 40px;
+            border-top: #000000;
+            border-bottom: #000000;
+            border-style: solid;
+            font-size: 15px;
+            text-align: right;
+        }
+        nav ul {
+            display: flex;
+            justify-content: end;
+            list-style-type: none;
+        }
+        nav ul li {
+            margin-right: 10px;
+        }
+
+        section {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        footer {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 10px 0;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .lista-uzytkownikow {
+            margin-bottom: 20px;
+        }
+        .lista-uzytkownikow ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+        .lista-uzytkownikow li {
+            padding: 8px;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+        }
+        .dodaj-uzytkownika {
+            width: 50%;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 5px;
+            text-align: center;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        .dodaj-uzytkownika input[type="text"],
+        .dodaj-uzytkownika input[type="password"] {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            box-sizing: border-box;
+        }
+        .dodaj-uzytkownika input[type="submit"] {
+            width: calc(100% - 20px);
+            background-color: #1b962f;
+            color: #ffffff;
+            border: none;
+            padding: 10px;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        .dodaj-uzytkownika .back-button {
+            margin-top: 20px;
+ 
+        }
+        .dodaj-uzytkownika .back-button a {
+            background-color: #f74c4c;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 3px;
+            display: inline-block;
+        }
+        .dodaj-uzytkownika .back-button a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo-container">
+            <img src="{% static 'base/img/Logo.png' %}" alt="Logo" class="logo" width="250" height="80"> 
+        </div>
+    </header>
+    <nav>
+        <ul>
+            {% if user.is_authenticated %}
+                <li>Zalogowany jako: {{ user.username }}</li>
+                <li><a href="{% url 'url_logout' %}">Wyloguj</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+    <section>
+        <div class="lista-uzytkownikow">
+            <h2>Lista użytkowników</h2>
+            <ul>
+                {% for user in users %}
+                    <li>{{ user.username }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="dodaj-uzytkownika">
+            <h2>Dodaj użytkownika</h2>
+            <form action="{% url 'url_admin_dodawanie_uzytkownikow' %}" method="post">
+                {% csrf_token %}
+                <input type="text" name="username" placeholder="Nazwa użytkownika" required>
+                <input type="password" name="password" placeholder="Hasło" required>
+                <input type="submit" value="Dodaj użytkownika">
+            </form>
+            <div class="back-button">
+                <a href="{% url 'url_admin_wybor' %}">Powrót</a>
+            </div>
+        </div>
+        
+    </section>
+    <footer>
+        &copy; 2024 Controlex. All rights reserved.
+    </footer>
+</body>
+</html>

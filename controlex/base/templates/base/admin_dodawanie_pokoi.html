@@ -1,0 +1,224 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zarządzanie pokojami</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #fa8f8f;
+            color: #000000;
+            padding: 10px 20px;
+            text-align: center; 
+            height: 80px;
+        }
+
+        nav ul {
+            display: flex;
+            justify-content: end;
+            list-style-type: none;
+        }
+        
+        nav ul li {
+            margin-right: 10px;
+        }
+        
+        section {
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+        
+        footer {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 10px 0;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .logo {
+            width: 250px;
+            height: 80px;
+        }
+        
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            width: 100%;
+        }
+        
+        .dodaj-pokoj {
+            width: 40%;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            margin-right: 20px;
+        }
+        
+        .dodaj-pokoj h2 {
+            margin-bottom: 20px;
+        }
+        
+        .dodaj-pokoj label {
+            display: block;
+            margin-bottom: 10px;
+            text-align: left;
+        }
+        
+        .dodaj-pokoj input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            box-sizing: border-box;
+        }
+        
+        .dodaj-pokoj input[type="submit"] {
+            width: calc(100% - 20px);
+            background-color: #1b962f;
+            color: #ffffff;
+            border: none;
+            padding: 10px;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        
+        .dodaj-pokoj .back-button {
+            margin-top: 20px;
+        }
+        
+        .dodaj-pokoj .back-button a {
+            background-color: #f74c4c;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 3px;
+            display: inline-block;
+        }
+        
+        .dodaj-pokoj .back-button a:hover {
+            text-decoration: underline;
+        }
+        
+        .lista-pokoi {
+            width: 60%;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .lista-pokoi h2 {
+            margin-bottom: 20px;
+        }
+        
+        .lista-pokoi table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .lista-pokoi th, .lista-pokoi td {
+            padding: 8px;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+        }
+        
+        .lista-pokoi th {
+            background-color: #f74c4c;
+            color: white;
+        }
+        
+        .lista-pokoi td button {
+            background-color: #f74c4c;
+            color: white;
+            border: none;
+            padding: 6px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        
+        .lista-pokoi td button:hover {
+            background-color: #d43e3e;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo-container">
+            <img src="{% static 'base/img/Logo.png' %}" alt="Logo" class="logo" width="250" height="80"> 
+        </div>
+    </header>
+    <nav>
+        <ul>
+            {% if user.is_authenticated %}
+                <li>Zalogowany jako: {{ user.username }}</li>
+                <li><a href="{% url 'url_logout' %}">Wyloguj</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+    <section>
+        <div class="container">
+            <div class="dodaj-pokoj">
+                <h2>Dodawanie nowego pokoju</h2>
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <input type="submit" value="Dodaj użytkownika">
+                </form>
+                <div class="back-button">
+                    <a href="{% url 'url_admin_wybor' %}">Powrót</a>
+                </div>
+            </div>
+            <div class="lista-pokoi">
+                <h2>Lista pokoi</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nazwa pokoju</th>
+                            <th>Opis</th>
+                            <th>Akcje</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for pokoj in pokoje %}
+                        <tr>
+                            <td>{{ pokoj.nazwa }}</td>
+                            <td>{{ pokoj.opis }}</td>
+                            <td>
+                                <form method="post" action="{% url 'url_usun_pokoj' pokoj.id %}">
+                                    {% csrf_token %}
+                                    <button type="submit">Usuń</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+    <footer>
+        &copy; 2024 Controlex. All rights reserved.
+    </footer>
+</body>
+</html>

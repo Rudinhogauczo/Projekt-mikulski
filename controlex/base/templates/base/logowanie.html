@@ -1,0 +1,113 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Controlex</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #fa8f8f;
+            color: #000000;
+            padding: 10px 20px;
+            text-align: center; 
+        }
+        nav {
+            background-color: #f74c4c;
+            color: #fff;
+            padding: 10px 20px;
+            border-top: #000000;
+            border-bottom: #000000;
+            border-width: 1px;
+            border-style: solid;
+        }
+        nav ul {
+            display: flex;
+            justify-content: space-between;
+            list-style-type: none;
+            padding: 0;
+        }
+        nav ul li {
+            margin-right: 10px;
+        }
+        section {
+            padding: 20px;
+        }
+        footer {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 10px 0;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .logo {
+            margin-right: 10px;
+            padding-bottom: 10px; 
+            width: 250px; 
+            height: auto; 
+        }
+        .logowanko {
+            margin: 0 auto;
+            width: 300px;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        .logowanko input[type="text"],
+        .logowanko input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            box-sizing: border-box;
+        }
+        .logowanko input[type="submit"] {
+            width: 100%;
+            background-color: #fa8f8f;
+            color: #ffffff;
+            border: none;
+            padding: 10px;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo-container">
+            <img src="{% static 'base/img/Logo.png' %}" alt="Logo" class="logo" width="250" height="80"> 
+        </div>
+    </header>
+    <nav>
+        <ul>       
+        </ul>
+    </nav>
+    <section>
+        <div class="logowanko">
+            <h2>Logowanie</h2>
+            <form id="login-form" method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit">Zaloguj</button>
+            </form>
+        </div>
+    </section>
+    <footer>
+        &copy; 2024 Controlex. All rights reserved.
+    </footer>
+</body>
+</html>

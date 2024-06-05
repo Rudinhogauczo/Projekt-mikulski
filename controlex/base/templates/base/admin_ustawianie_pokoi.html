@@ -1,0 +1,237 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zarządzanie urządzeniami</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        
+        header {
+            background-color: #fa8f8f;
+            color: #000000;
+            padding: 10px 20px;
+            text-align: center;
+            height: 80px;
+        }
+        
+        nav {
+            background-color: #f74c4c;
+            color: #fff;
+            padding-right: 40px;
+            border-top: 1px solid #000000;
+            border-bottom: 1px solid #000000;
+            font-size: 15px;
+            text-align: right;
+        }
+        
+        nav ul {
+            display: flex;
+            justify-content: end;
+            list-style-type: none;
+        }
+        
+        nav ul li {
+            margin-right: 10px;
+        }
+        
+        section {
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+        
+        footer {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 10px 0;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .logo {
+            width: 250px;
+            height: 80px;
+        }
+        
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            width: 100%;
+        }
+        
+        .dodaj-urzadzenie,
+        .lista-urzadzen {
+            width: 45%;
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            margin-right: 20px;
+        }
+        
+        .dodaj-urzadzenie h2,
+        .lista-urzadzen h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+        
+        .dodaj-urzadzenie label,
+        .lista-urzadzen label {
+            display: block;
+            margin-bottom: 10px;
+            text-align: left;
+            color: #555;
+        }
+        
+        .dodaj-urzadzenie input[type="text"],
+        .dodaj-urzadzenie select,
+        .lista-urzadzen input[type="text"],
+        .lista-urzadzen select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        
+        .dodaj-urzadzenie input[type="submit"],
+        .lista-urzadzen input[type="submit"] {
+            width: 100%;
+            background-color: #f74c4c;
+            color: #fff;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        .back-button {
+            margin-top: 20px;
+        }
+        
+        .back-button a {
+            background-color: #f74c4c;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            display: inline-block;
+            transition: background-color 0.3s ease;
+        }
+        
+        .back-button a:hover {
+            background-color: #d43e3e;
+            text-decoration: underline;
+        }
+        
+        .lista-urzadzen table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        .lista-urzadzen th,
+        .lista-urzadzen td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+        }
+        
+        .lista-urzadzen th {
+            background-color: #f74c4c;
+            color: white;
+        }
+        
+        .lista-urzadzen td button {
+            background-color: #f74c4c;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .lista-urzadzen td button:hover {
+            background-color: #d43e3e;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo-container">
+            <img src="{% static 'base/img/Logo.png' %}" alt="Logo" class="logo" width="250" height="80"> 
+        </div>
+    </header>
+    <nav>
+        <ul>
+            {% if user.is_authenticated %}
+                <li>Zalogowany jako: {{ user.username }}</li>
+                <li><a href="{% url 'url_logout' %}">Wyloguj</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+    <section>
+        <div class="container">
+            <div class="dodaj-urzadzenie">
+                <h2>Dodawanie nowego urządzenia</h2>
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <input type="submit" value="Dodaj urządzenie">
+                </form>
+                <div class="back-button">
+                    <a href="{% url 'url_admin_wybor' %}">Powrót</a>
+                </div>
+            </div>
+            <div class="lista-urzadzen">
+                <h2>Lista urządzeń</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nazwa urządzenia</th>
+                            <th>Pokój</th>
+                            <th>Akcje</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for urzadzenie in urzadzenia %}
+                        <tr>
+                            <td>{{ urzadzenie.name }}</td>
+                            <td>{{ urzadzenie.room.nazwa }}</td>
+                            <td>
+                                <form method="post" action="{% url 'url_delete_urzadzenie' urzadzenie.id %}">
+                                    {% csrf_token %}
+                                    <button type="submit">Usuń</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+    <footer>
+        &copy; 2024 Controlex. All rights reserved.
+    </footer>
+</body>
+</html>

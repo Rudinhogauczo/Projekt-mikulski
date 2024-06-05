@@ -1,0 +1,104 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Administratora</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #fa8f8f;
+            color: #000000;
+            padding: 10px 20px;
+            text-align: center; 
+            height: 80px;
+        }
+        nav {
+            background-color: #f74c4c;
+            color: #fff;
+            padding-right: 40px;
+            border-top: #000000;
+            border-bottom: #000000;
+            border-width: 1px;
+            border-style: solid;
+            font-size: 15px;
+            text-align: right;
+        }
+        nav ul {
+            display: flex;
+            justify-content: end;
+            list-style-type: none;
+        }
+        nav ul li {
+            margin-right: 10px;
+        }
+        section {
+            padding: 20px;
+            text-align: center;
+        }
+        footer {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 10px 0;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+        .opcje-admina {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .opcje-admina2 {
+            margin-bottom: 10px;
+        }
+        .opcje-admina2 a {
+            background-color: #1b962f;
+            color: #ffffff;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+        }
+        .opcje-admina2:not(:last-child) {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo-container">
+            <img src="{% static 'base/img/Logo.png' %}" alt="Logo" class="logo" width="250" height="80"> 
+        </div>
+    </header>
+    <nav>
+        <ul>
+            {% if user.is_authenticated %}
+                <li>Zalogowany jako: {{ user.username }}</li>
+                <li><a href="{% url 'url_logout' %}">Wyloguj</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+    <section>
+        <div class="opcje-admina">
+            <div class="opcje-admina2">
+                <a href="{% url 'url_admin_dodawanie_uzytkownikow' %}">Dodaj użytkownika</a>
+            </div>
+            <div class="opcje-admina2">
+                <a href="{% url 'url_admin_ustawianie_pokoi' %}">Zarządzaj urządzeniami</a>
+            </div>
+            <div class="opcje-admina2">
+                <a href="{% url 'url_admin_dodawanie_pokoi' %}">Dodaj pokój</a>
+            </div>
+        </div>
+    </section>
+    <footer>
+        &copy; 2024 Controlex. All rights reserved.
+    </footer>
+</body>
+</html>
