@@ -23,14 +23,20 @@ def toggle_device_pin_state(request):
         device.state = new_state
         device.save()
         pin_number = device.pin
+
+        
         GPIO.setup(pin_number, GPIO.OUT)
-        GPIO.output(pin_number, new_state)
+        if new_state == 'TRUE':
+            GPIO.output(pin_number, 1)
+        else:
+            GPIO.output(pin_number, 0)
 
         return JsonResponse({'success': True, 'new_state': new_state})
     else:
         return JsonResponse({'error': 'Invalid request method'})
 
 class CustomLoginView(LoginView):
+
     template_name = 'base/logowanie.html'
     authentication_form = LoginForm
     def get_success_url(self) -> str:
